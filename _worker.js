@@ -369,32 +369,7 @@ export default {
 								if (match) {
 									节点地址 = match[1];  // IP地址或域名(可能带方括号)
 									节点端口 = match[2] ? match[2] : (协议类型 === 'ss' && !config_JSON.SS.TLS) ? '80' : '443';  // 端口,TLS默认443 noTLS默认80
-									
-									// --- 👇 开始修改：自动提取国家/别名逻辑 👇 ---
-									
-									// 1. 获取 Cloudflare 节点所在国家和城市三字码
-									const country = request.cf?.country || "UNK"; 
-									const colo = request.cf?.colo || "UNK";
-									
-									// 2. 将国家代码映射为国旗 Emoji（提升 v2rayN 视觉效果）
-									const flagMap = {
-										"US": "🇺🇸", "HK": "🇭🇰", "SG": "🇸🇬", "JP": "🇯🇵", 
-										"TW": "🇹🇼", "KR": "🇰🇷", "GB": "🇬🇧", "CN": "🇨🇳"
-									};
-									const flag = flagMap[country] || "🌐"; // 找不到对应国旗就用地球图标
-
-									// 3. 提取原本自带的备注或IP（例如你在 ADD.txt 里写的备注）
-									const baseRemark = match[3] || 节点地址;
-									
-									// 4. 定义你的专属主别名（可随意修改）
-									const myAlias = "我的自建节点";
-									
-									// 5. 拼接最终显示在 v2rayN 里的名字格式
-									// 最终效果示例：🇺🇸 [US-LAX] 我的自建节点 (104.18.2.1)
-									节点备注 = `${flag} [${country}-${colo}] ${myAlias} (${baseRemark})`;
-									
-									// --- 👆 修改结束 👆 ---
-
+									节点备注 = match[3] || 节点地址;  // 备注,默认为地址本身
 								} else {
 									// 不规范的格式，跳过处理返回null
 									console.warn(`[订阅内容] 不规范的IP格式已忽略: ${原始地址}`);
